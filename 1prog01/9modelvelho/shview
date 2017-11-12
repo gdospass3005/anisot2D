@@ -1,0 +1,5 @@
+ximage n1=400 <C11.ad title='C11' cmap=hue &
+ximage n1=400 <C13.ad title='C13' cmap=hue &
+ximage n1=400 <C33.ad title='C33' cmap=hue &
+ximage n1=400 <C44.ad title='C44' cmap=hue &
+ximage n1=400 <rhox.ad title='rhox' cmap=hue &

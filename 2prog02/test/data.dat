@@ -1,0 +1,24 @@
+Nx         200
+Nz         200
+dx         1.
+dt         0.0001
+fpeak      50.
+itmax      500
+lx         80
+lz         100
+nb         4
+F          0.0002
+fsf        1
+nphones    10
+npmin_x    10
+npmin_z    10
+dnp_x      1
+dnp_z      0
+nsnaps     10
+snapmin    300
+dsnap      50
+
+
+Parametros otimos de borda p/ acustico (c/ borda paraxial):
+nb         40
+F          0.0002

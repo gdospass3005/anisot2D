@@ -1,0 +1,22 @@
+Nx        256
+Nz        256
+dx        2.
+dt        0.0001
+fpeak     50.
+itmax     3000
+lx        60
+lz        60
+r         4.
+nb        40
+F         0.005
+fsf       0
+nphones   100
+npmin_x   60
+npmin_z   60
+dnp_x     1
+dnp_z     0
+nsnaps    30
+snapmin   100
+dsnap     100
+
+!itmax 3000

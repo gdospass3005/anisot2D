@@ -1,0 +1,74 @@
+MODULE mdle_prop
+
+CONTAINS
+  SUBROUTINE prop_anisot(Vx,Vz,Sxx,Sxz,Szz,&
+       C11,C13,C33,C44,rhox,rhoz,dx,dt,Nx,Nz)
+    IMPLICIT NONE
+    REAL, DIMENSION(:,:), INTENT(INOUT) :: Vx,Vz,Sxx,Sxz,Szz
+    REAL, DIMENSION(:,:), INTENT(IN)    :: C11,C13,C33,C44
+    REAL, DIMENSION(:,:), INTENT(IN)    :: rhox,rhoz
+    REAL,    INTENT(IN) :: dx,dt
+    INTEGER, INTENT(IN) :: Nx,Nz
+
+    REAL :: aux1,aux2,aux3,aux4,aux
+    INTEGER :: i,j
+
+    ! Space derivatives of velocities => stresses
+    DO j=3,Nz-2
+       DO i=3,Nx-2
+
+          aux1 = (-1./24)*(Vx(i+2,j)-Vx(i-1,j)) + &
+               (9./8)*(Vx(i+1,j)-Vx(i,j)); aux3=aux1
+          aux1 = C11(i,j)*aux1/dx
+          aux2 = (-1./24)*(Vz(i,j+1)-Vz(i,j-2)) + &
+               (9./8)*(Vz(i,j)-Vz(i,j-1)); aux4=aux2
+          aux2 = C13(i,j)*aux2/dx
+          aux = dt*(aux1+aux2)
+          Sxx(i,j) = aux + Sxx(i,j)
+
+          aux1 = C13(i,j)*aux3/dx
+          aux2 = C33(i,j)*aux4/dx
+          aux = dt*(aux1+aux2)
+          Szz(i,j) = aux + Szz(i,j)
+
+          aux1 = (-1./24)*(Vz(i+1,j)-Vz(i-2,j)) + &
+               (9./8)*(Vz(i,j)-Vz(i-1,j))
+          aux1 = C44(i,j)*aux1/dx
+          aux2 = (-1./24)*(Vx(i,j+2)-Vx(i,j-1)) + &
+               (9./8)*(Vx(i,j+1)-Vx(i,j))
+          aux2 = C44(i,j)*aux2/dx
+          aux = dt*(aux1+aux2)
+          Sxz(i,j) = aux + Sxz(i,j)
+
+       END DO
+    END DO
+
+    ! Space derivatives of stresses => velocities
+    DO i=3,Nx-2
+       DO j=3,Nz-2
+
+          aux1 = (-1./24)*(Sxx(i+1,j)-Sxx(i-2,j)) + &
+               (9./8)*(Sxx(i,j)-Sxx(i-1,j))
+          aux1 = aux1/dx
+          aux2 = (-1./24)*(Sxz(i,j+1)-Sxz(i,j-2)) + &
+               (9./8)*(Sxz(i,j)-Sxz(i,j-1))
+          aux2 = aux2/dx
+          aux = dt*rhox(i,j)*(aux1+aux2)
+          Vx(i,j) = aux + Vx(i,j)
+
+          aux1 = (-1./24)*(Sxz(i+2,j)-Sxz(i-1,j)) + &
+               (9./8)*(Sxz(i+1,j)-Sxz(i,j))
+          aux1 = aux1/dx
+          aux2 = (-1./24)*(Szz(i,j+2)-Szz(i,j-1)) + &
+               (9./8)*(Szz(i,j+1)-Szz(i,j))
+          aux2 = aux2/dx
+          aux = dt*rhoz(i,j)*(aux1+aux2)
+          Vz(i,j) = aux + Vz(i,j)
+
+       END DO
+    END DO
+
+
+  END SUBROUTINE prop_anisot
+
+END MODULE mdle_prop

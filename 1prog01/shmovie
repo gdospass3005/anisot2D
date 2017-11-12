@@ -1,0 +1,3 @@
+xmovie n1=400 n2=400 loop=1 title="Frame %g" \
+  height=550. width=550. <snapshots_Vx.ad &
+ 

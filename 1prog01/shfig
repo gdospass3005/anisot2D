@@ -1,0 +1,5 @@
+suaddhead n1=400 <snapshots_Vz.ad | sushw key=dt a=200 | \
+suwind min=11600 max=12000 | supsimage width=7.0 height=7.0 > fig.ps
+
+ghostview fig.ps &
+

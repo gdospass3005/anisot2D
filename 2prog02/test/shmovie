@@ -1,0 +1,4 @@
+xmovie n1=200 n2=200 loop=1 <snapshots_P.ad width=430 height=400 title="Snap P %g" cmap=hue
+xmovie n1=200 n2=200 loop=1 <snapshots_S.ad width=430 height=400 title="Snap S %g" cmap=hue
+xmovie n1=200 n2=200 loop=1 <snapshots_Vx.ad width=430 height=400 title="Snap Vx %g" cmap=hue
+

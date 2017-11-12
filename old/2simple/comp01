@@ -1,0 +1,12 @@
+cd compila
+rm -f *
+cp ../*f90 .
+f90 -O4 -o acoustic *.f90
+
+cd ..
+cd test
+cp ../compila/acoustic .
+
+#acoustic
+cd ..
+more comp01

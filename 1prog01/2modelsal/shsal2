@@ -1,0 +1,164 @@
+#unif2 <interf001.txt nx=512 nz=512 dx=1 dz=1 ninf=2 \
+#   v00=0,1,0 method=spline >m_sand001.ad
+#unif2 <interf001a.txt nx=512 nz=512 dx=1 dz=1 ninf=2 \
+#   v00=0,1,0 method=spline >m_sand001a.ad
+#unif2 <interf002.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,0 method=linear >m_saltwater.ad
+#unif2 <interf003.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=0,1 method=linear >m_lapa.ad
+#unif2 <interf003.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,0 method=linear >m_capa.ad
+#farith <m_sand001.ad in2=m_lapa.ad op=mul >m_sand1.ad
+#farith <m_sand001a.ad in2=m_capa.ad op=mul >m_sand1a.ad
+#farith <m_sand1.ad in2=m_sand1a.ad op=add >m_sandx.ad
+#unif2 <interf004.txt nx=512 nz=512 dx=1 dz=1 ninf=2 \
+#  v00=1,0,1 method=spline >m_saltneg.ad
+#unif2 <interf004.txt nx=512 nz=512 dx=1 dz=1 ninf=2 \
+#  v00=0,1,0 method=spline >m_salt.ad
+#farith <m_sandx.ad in2=m_saltneg.ad op=mul >m_sand.ad
+#farith <m_sand.ad in2=m_salt.ad op=add >m_sandpsalt.ad
+#farith <m_saltwater.ad in2=m_sandpsalt.ad op=add >m_aux1.ad
+#unif2 <interf006.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,0 method=linear >m_aux2.ad
+#farith <m_aux1.ad in2=m_aux2.ad op=mul >m_aux3.ad
+#unif2 <interf006.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,1 method=linear >m_aux4.ad
+#farith <m_aux4.ad in2=m_aux2.ad op=sub >m_aux5.ad
+#farith <m_aux5.ad in2=m_aux3.ad op=add >m_aux6.ad
+#farith <m_aux4.ad in2=m_aux6.ad op=sub >m_shale1.ad
+#farith <m_aux1.ad in2=m_shale1.ad op=add >m_aux7.ad
+#farith <m_aux4.ad in2=m_aux7.ad op=sub >m_aux8.ad
+#unif2 <interf007.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,0 method=linear >m_aux9.ad
+#farith <m_aux9.ad in2=m_aux8.ad op=mul >m_shale2.ad
+#unif2 <interf008.txt nx=512 nz=512 dx=1 dz=1 ninf=2 \
+#  v00=0,1,0 method=linear >m_aux10.ad
+#farith <m_aux10.ad in2=m_aux8.ad op=mul >m_shale3.ad
+#farith <m_aux4.ad in2=m_shale3.ad op=sub >m_aux11.ad
+#unif2 <interf009.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=0,1 method=linear >m_aux12.ad
+#farith <m_aux12.ad in2=m_aux11.ad op=mul >m_bottomsand.ad
+#unif2 <interf010.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,0 method=linear >m_aux13.ad
+#farith <m_aux13.ad in2=m_sand.ad op=mul >m_gassand.ad
+#farith <m_sand.ad in2=m_gassand.ad op=sub >m_aux13.ad
+#unif2 <interf011.txt nx=512 nz=512 dx=1 dz=1 ninf=1 \
+#  v00=1,0 method=linear >m_aux14.ad
+#farith <m_aux14.ad in2=m_sand.ad op=mul >m_aux15.ad
+#farith <m_aux15.ad in2=m_gassand.ad op=sub >m_oilsand.ad
+#farith <m_sand.ad in2=m_gassand.ad op=sub |\
+#farith in2=m_oilsand.ad op=sub > m_brinesand.ad
+#ximage n1=512 n2=512 wbox=640 hbox=600 <m_brinesand.ad
+
+#farith <m_saltwater.ad in2=m_brinesand.ad op=add |\
+#farith in2=m_salt.ad op=add |\
+#farith in2=m_gassand.ad op=add |\
+#farith in2=m_oilsand.ad op=add |\
+#farith in2=m_shale1.ad op=add |\
+#farith in2=m_shale2.ad op=add |\
+#farith in2=m_shale3.ad op=add |\
+#farith in2=m_bottomsand.ad op=add |\
+#ximage n1=512 n2=512 wbox=640 hbox=600 
+
+farith <m_saltwater.ad  op=scale scale=0.225 >m1.ad
+farith <m_gassand.ad    op=scale scale=3.168 >m2.ad
+farith <m_oilsand.ad    op=scale scale=3.307 >m3.ad
+farith <m_brinesand.ad  op=scale scale=3.505 >m4.ad
+farith <m_shale1.ad     op=scale scale=1.613 >m5.ad
+farith <m_shale2.ad     op=scale scale=2.939 >m6.ad
+farith <m_shale3.ad     op=scale scale=5.587 >m7.ad
+farith <m_salt.ad       op=scale scale=4.560 >m8.ad
+farith <m_bottomsand.ad op=scale scale=7.419 >m9.ad
+farith <m1.ad in2=m2.ad op=add |\
+farith in2=m3.ad op=add |\
+farith in2=m4.ad op=add |\
+farith in2=m5.ad op=add |\
+farith in2=m6.ad op=add |\
+farith in2=m7.ad op=add |\
+farith in2=m8.ad op=add |\
+farith in2=m9.ad op=add >C11.ad
+#ximage <C11.ad n1=512 n2=512 wbox=640 hbox=600 cmap=rgb5 
+
+farith <m_saltwater.ad  op=scale scale=0.225 >m1.ad
+farith <m_gassand.ad    op=scale scale=3.168 >m2.ad
+farith <m_oilsand.ad    op=scale scale=3.307 >m3.ad
+farith <m_brinesand.ad  op=scale scale=3.505 >m4.ad
+farith <m_shale1.ad     op=scale scale=1.120 >m5.ad
+farith <m_shale2.ad     op=scale scale=2.370 >m6.ad
+farith <m_shale3.ad     op=scale scale=3.676 >m7.ad
+farith <m_salt.ad       op=scale scale=4.560 >m8.ad
+farith <m_bottomsand.ad op=scale scale=7.419 >m9.ad
+farith <m1.ad in2=m2.ad op=add |\
+farith in2=m3.ad op=add |\
+farith in2=m4.ad op=add |\
+farith in2=m5.ad op=add |\
+farith in2=m6.ad op=add |\
+farith in2=m7.ad op=add |\
+farith in2=m8.ad op=add |\
+farith in2=m9.ad op=add >C33.ad
+#ximage <C33.ad n1=512 n2=512 wbox=640 hbox=600 cmap=rgb5 
+
+farith <m_saltwater.ad  op=scale scale=0.000 >m1.ad
+farith <m_gassand.ad    op=scale scale=1.426 >m2.ad
+farith <m_oilsand.ad    op=scale scale=1.426 >m3.ad
+farith <m_brinesand.ad  op=scale scale=1.426 >m4.ad
+farith <m_shale1.ad     op=scale scale=0.499 >m5.ad
+farith <m_shale2.ad     op=scale scale=0.8944 >m6.ad
+farith <m_shale3.ad     op=scale scale=1.428 >m7.ad
+farith <m_salt.ad       op=scale scale=1.530 >m8.ad
+farith <m_bottomsand.ad op=scale scale=3.330 >m9.ad
+farith <m1.ad in2=m2.ad op=add |\
+farith in2=m3.ad op=add |\
+farith in2=m4.ad op=add |\
+farith in2=m5.ad op=add |\
+farith in2=m6.ad op=add |\
+farith in2=m7.ad op=add |\
+farith in2=m8.ad op=add |\
+farith in2=m9.ad op=add >C44.ad
+#ximage <C44.ad n1=512 n2=512 wbox=640 hbox=600 cmap=rgb5 
+
+farith <m_saltwater.ad  op=scale scale=0.225 >m1.ad
+farith <m_gassand.ad    op=scale scale=0.316 >m2.ad
+farith <m_oilsand.ad    op=scale scale=0.455 >m3.ad
+farith <m_brinesand.ad  op=scale scale=0.653 >m4.ad
+farith <m_shale1.ad     op=scale scale=0.1757 >m5.ad
+farith <m_shale2.ad     op=scale scale=0.581 >m6.ad
+farith <m_shale3.ad     op=scale scale=1.316 >m7.ad
+farith <m_salt.ad       op=scale scale=1.500 >m8.ad
+farith <m_bottomsand.ad op=scale scale=0.759 >m9.ad
+farith <m1.ad in2=m2.ad op=add |\
+farith in2=m3.ad op=add |\
+farith in2=m4.ad op=add |\
+farith in2=m5.ad op=add |\
+farith in2=m6.ad op=add |\
+farith in2=m7.ad op=add |\
+farith in2=m8.ad op=add |\
+farith in2=m9.ad op=add >C13.ad
+#ximage <C13.ad n1=512 n2=512 wbox=640 hbox=600 cmap=rgb5 
+
+farith <m_saltwater.ad  op=scale scale=1000. >m1.ad
+farith <m_gassand.ad    op=scale scale=2112. >m2.ad
+farith <m_oilsand.ad    op=scale scale=2207. >m3.ad
+farith <m_brinesand.ad  op=scale scale=2237. >m4.ad
+farith <m_shale1.ad     op=scale scale=1560. >m5.ad
+farith <m_shale2.ad     op=scale scale=1990. >m6.ad
+farith <m_shale3.ad     op=scale scale=2480. >m7.ad
+farith <m_salt.ad       op=scale scale=2160. >m8.ad
+farith <m_bottomsand.ad op=scale scale=2485. >m9.ad
+farith <m1.ad in2=m2.ad op=add |\
+farith in2=m3.ad op=add |\
+farith in2=m4.ad op=add |\
+farith in2=m5.ad op=add |\
+farith in2=m6.ad op=add |\
+farith in2=m7.ad op=add |\
+farith in2=m8.ad op=add |\
+farith in2=m9.ad op=add >rhox.ad
+ximage <rhox.ad n1=512 n2=512 wbox=640 hbox=600 cmap=rgb5 
+
+#psimage n1=512 n2=512 width=6 height=6 >/scr14/gfp/model.ps
+# brgb=0.0,0.0,1.0 grgb=0.0,1.0,0.0 wrgb=1.0,0.0,0.0 >/scr14/gfp/model.ps
+
+
+
+
+

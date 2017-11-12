@@ -1,0 +1,3 @@
+f90 -o junta *.f90
+
+#junta

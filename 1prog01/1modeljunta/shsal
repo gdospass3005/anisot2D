@@ -1,0 +1,80 @@
+#unif2 <interf001.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=2 \
+#   v00=0,1,0 method=spline >m_sand001.ad
+
+#unif2 <interf002.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=2 \
+#   v00=0,1,0 method=spline >m_sand002.ad
+
+#unif2 <interf003.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=2 \
+#   v00=0,1,0 method=spline >m_salt.ad
+
+#unif2 <interf004.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=0,1 method=spline >m_fract001.ad
+
+#unif2 <interf004.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=1,0 method=spline >m_fract002.ad
+
+#farith <m_sand001.ad in2=m_fract001.ad op=mul >m_sand001a.ad
+
+#farith <m_sand002.ad in2=m_fract002.ad op=mul >m_sand002a.ad
+
+#farith <m_sand001a.ad in2=m_sand002a.ad op=add >m_sand.ad
+
+#unif2 <interf003.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=2 \
+#   v00=1,0,1 method=spline >m_salt_neg.ad
+
+#farith <m_sand.ad in2=m_salt_neg.ad op=mul >m_sand_b.ad
+
+#unif2 <interf005.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=1,0 method=linear >m_bdary001.ad
+
+#farith <m_sand_b.ad in2=m_bdary001.ad op=mul >m_gasoil_sand.ad
+
+#unif2 <interf006.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=1,0 method=linear >m_bdary002.ad
+#farith <m_sand_b.ad in2=m_bdary002.ad op=mul >m_gas_sand.ad
+
+#farith <m_gasoil_sand.ad in2=m_gas_sand.ad op=sub >m_oil_sand.ad
+
+#farith <m_sand_b.ad in2=m_gasoil_sand.ad op=sub >m_brine_sand.ad
+
+#farith <m_sand_b.ad in2=m_salt.ad op=add >m_sandsalt.ad
+
+#unif2 <interf006.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=1,1 method=linear >m_ones.ad
+
+#farith <m_ones.ad in2=m_sandsalt.ad op=sub >m_sandsalt_neg.ad
+
+#unif2 <interf007.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=2 \
+#   v00=0,1,0 method=linear >m_aux1.ad
+
+#farith <m_aux1.ad in2=m_sandsalt_neg.ad op=mul >m_shale1.ad
+
+#unif2 <interf007.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=2 \
+#   v00=0,1,1 method=linear >m_aux2.ad
+
+#farith <m_ones.ad in2=m_aux2.ad op=sub >m_saltwater.ad
+
+#unif2 <interf008.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=0,1 method=linear >m_bottomsand.ad
+
+#unif2 <interf009.txt nx=1100 nz=1050 dx=0.5 dz=0.5 ninf=1 \
+#   v00=1,0 method=linear >m_aux3.ad
+
+#farith <m_aux3.ad in2=m_bottomsand.ad op=add >m_aux4.ad
+
+#farith <m_ones.ad in2=m_aux4.ad op=sub >m_shale3.ad
+
+#farith <m_saltwater.ad in2=m_shale1.ad op=add >m_aux5.ad
+
+#farith <m_aux5.ad in2=m_sandsalt.ad op=add >m_aux6.ad
+
+#farith <m_aux6.ad in2=m_shale3.ad op=add >m_aux7.ad
+
+#farith <m_aux7.ad in2=m_bottomsand.ad op=add >m_aux8.ad
+
+#farith <m_ones.ad in2=m_aux8.ad op=sub >m_shale2.ad
+
+ximage n1=1050 <m_sand_b.ad d1=0.5 d2=0.5 wbox=700 hbox=650 \
+ d1num=50 d2num=50 &
+
+

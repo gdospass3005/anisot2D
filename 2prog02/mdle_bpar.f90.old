@@ -1,0 +1,75 @@
+MODULE mdle_bpar
+
+IMPLICIT NONE
+
+CONTAINS 
+  SUBROUTINE bpar_left(acp,pvp,oVel,Nx,Nz,dx,dz,dt)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: Nx, Nz
+    REAL, INTENT(IN) :: dx, dz, dt
+    REAL, INTENT(IN),  DIMENSION(:,:) :: acp,oVel
+    REAL, INTENT(INOUT),  DIMENSION(:,:) :: pvp
+    INTEGER :: iz
+
+     ! Borda paraxial esquerda
+    DO iz=2,(Nz-1)
+       pvp(1,iz) = SQRT(oVel(1,iz)) * (dt/dx) *&
+         (acp(2,iz)-acp(1,iz)-(pvp(3,iz)-pvp(2,iz))) +&
+         acp(1,iz) + acp(2,iz) - pvp(2,iz)
+    END DO
+  END SUBROUTINE bpar_left
+
+    
+  SUBROUTINE bpar_right(acp,pvp,oVel,Nx,Nz,dx,dz,dt)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: Nx, Nz
+    REAL, INTENT(IN) :: dx, dz, dt
+    REAL, INTENT(IN),  DIMENSION(:,:) :: acp,oVel
+    REAL, INTENT(INOUT),  DIMENSION(:,:) :: pvp
+    INTEGER :: iz
+
+    ! Borda paraxial direita
+    DO iz=2,(Nz-1)
+       pvp(Nx,iz) = -SQRT(oVel(Nx,iz)) * (dt/dx) *&
+         (acp(Nx,iz)-acp(Nx-1,iz)-(pvp(Nx-1,iz)-pvp(Nx-2,iz))) +&
+         acp(Nx,iz) + acp(Nx-1,iz) - pvp(Nx-1,iz)
+    END DO
+  END SUBROUTINE bpar_right
+
+    
+  SUBROUTINE bpar_top(acp,pvp,oVel,Nx,Nz,dx,dz,dt)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: Nx, Nz
+    REAL, INTENT(IN) :: dx, dz, dt
+    REAL, INTENT(IN),  DIMENSION(:,:) :: acp,oVel
+    REAL, INTENT(INOUT),  DIMENSION(:,:) :: pvp
+    INTEGER :: ix
+    
+    ! Borda paraxial de cima
+    DO ix=2,(Nx-1)
+      pvp(ix,1) = SQRT(oVel(ix,1)) * (dt/dx) *&
+        (acp(ix,2)-acp(ix,1)-(pvp(ix,3)-pvp(ix,2))) +&
+        acp(ix,1) + acp(ix,2) - pvp(ix,2)
+    END DO
+  END SUBROUTINE bpar_top
+
+    
+  SUBROUTINE bpar_bottom(acp,pvp,oVel,Nx,Nz,dx,dz,dt)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: Nx, Nz
+    REAL, INTENT(IN) :: dx, dz, dt
+    REAL, INTENT(IN),  DIMENSION(:,:) :: acp,oVel
+    REAL, INTENT(INOUT),  DIMENSION(:,:) :: pvp
+    INTEGER :: ix
+
+    ! Borda paraxial de baixo
+    DO ix=2,(Nx-1)
+       pvp(ix,Nz) = -SQRT(oVel(ix,Nz)) * (dt/dx) *&
+         (acp(ix,Nz)-acp(ix,Nz-1)-(pvp(ix,Nz-1)-pvp(ix,Nz-2))) +&
+         acp(ix,Nz) + acp(ix,Nz-1) - pvp(ix,Nz-1)
+    END DO
+  END SUBROUTINE bpar_bottom
+END MODULE
+
+
+

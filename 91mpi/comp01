@@ -1,0 +1,10 @@
+cd compila
+rm -f *
+cp ../*f90 .
+mpif90 -o mpi_anisot2D *.f90
+
+cd ..
+cd test
+cp ../compila/mpi_anisot2D .
+
+#mpirun -np 4 mpi_anisot2D

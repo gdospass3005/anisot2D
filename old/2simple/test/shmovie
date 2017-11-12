@@ -1,0 +1,2 @@
+xmovie n1=400 n2=600 loop=1 <snapshots_p.ad cmap=grey width=430 height=400 title="Frame %g"
+
